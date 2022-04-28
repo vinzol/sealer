@@ -1,0 +1,31 @@
+name: Auto build image
+on:
+  issue_comment:
+    types:
+      - created
+jobs:
+  issue_comment:
+    name: Auto build image
+    if: startswith(github.event.comment.body, '/imagebuild')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+
+      - name: Auto build image
+        id: autobuild
+        run: |
+          commentbody="${{github.event.comment.body}}"
+          version=`echo "$commentbody"|cut -d" " -f2`
+          echo "start to build kubernetes:$version"
+          sudo wget https://sealer.oss-cn-beijing.aliyuncs.com/sealer-latest.tar.gz && sudo tar -xvf sealer-latest.tar.gz -C /usr/bin
+          sudo sealer login ${{secrets.PRIVATEWAREHOUSE}}
+          sudo sealer build -t kubernetes:$version-alpine .
+          sudo sealer push kubernetes:$version-alpine
+          echo "::set-output name=version::$version"
+      - name: Success Commit
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            Image ${{ steps.autobuild.outputs.version }} build successfully!
