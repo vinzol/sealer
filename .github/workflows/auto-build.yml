@@ -1,8 +1,12 @@
 name: Auto build image
 on:
-  issue_comment:
-    types:
-      - created
+  on:
+  # main分支的push操作会触发当前脚本的执行
+  push:
+    branches: [ main ]
+  # main分支的pr操作会触发当前脚本的执行
+  pull_request:
+    branches: [ main ]
 jobs:
   issue_comment:
     name: Auto build image
