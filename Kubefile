@@ -1,4 +1,4 @@
 FROM registry.cn-qingdao.aliyuncs.com/sealer-apps/helm:v3.6.0
-#Install Ingress
+#Ingress
 COPY ingress-nginx-manifest.yaml manifests
 CMD kubectl apply -f manifests/ingress-nginx-manifest.yaml
