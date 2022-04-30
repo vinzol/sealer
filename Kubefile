@@ -1,4 +1,14 @@
-FROM registry.cn-qingdao.aliyuncs.com/sealer-apps/helm:v3.6.0
-#Install Ingress
-COPY ingress-nginx-manifest.yaml manifests
-CMD kubectl apply -f manifests/ingress-nginx-manifest.yaml
+FROM registry.cn-qingdao.aliyuncs.com/sealer-io/kubernetes:v1.19.8
+COPY helm-v3.8.2-linux-amd64.tar.gz .
+CMD tar zxvf helm-v3.8.2-linux-amd64.tar.gz && cp linux-amd64/helm /usr/bin && chmod +x /usr/bin/helm
+CMD helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace --set controller.dnsPolicy=ClusterFirstWithHostNet --set controller.hostNetwork=true --set controller.kind=DaemonSet --set controller.nodeSelector.ingress=true
+COPY imageList manifests
+COPY iscsi.yaml plugin
+#Longhorn
+COPY longhorn-iscsi-installation.yaml manifests/
+COPY longhorn-nfs-installation.yaml manifests/
+COPY longhorn charts                                                                                                                       
+RUN kubectl applly -f manifests/longhorn-iscsi-installation.yaml \
+    && kubectl applly -f manifests/longhorn-nfs-installation.yaml \
+    && helm install longhorn charts/longhorn --namespace longhorn-system --create-namespace --set defaultSettings.createDefaultDiskLabeledNodes=true --set defaultSettings.defaultDataPath="/longhorn" --set defaultSettings.priority-class=high-priority --set defaultSettings.taintToleration="app=longhorn:NoSchedule" --set defaultSettings.defaultReplicaCount=2 --set service.ui.type=NodePort --set service.ui.nodePort=30001
+
