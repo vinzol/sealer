@@ -11,7 +11,7 @@ jobs:
     permissions:
       issues: write
     steps:
-      - use: actions/checkout@v1
+      - uses: actions/checkout@v1
       - name: Auto build image
         id: autobuild
         run: |
