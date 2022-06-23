@@ -16,6 +16,7 @@ jobs:
         id: autobuild
         run: |
           commentbody="${{github.event.comment.body}}"
+          echo ${commentbody}
           version=`echo "$commentbody"|cut -d" " -f2`
           echo "start to build kubernetes:$version"
           buildName=registry.cn-hangzhou.aliyuncs.com/onekey-io/kubernetes
