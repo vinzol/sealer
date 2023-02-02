@@ -20,9 +20,9 @@ jobs:
           version=`echo "$commentbody"|cut -d" " -f2`
           echo "start to build kubernetes:$version"
           buildName=registry.cn-hangzhou.aliyuncs.com/onekey-io/kubernetes
-          sudo wget https://sealer.oss-cn-beijing.aliyuncs.com/sealer-latest.tar.gz && sudo tar -xvf sealer-latest.tar.gz -C /usr/bin
+          sudo wget https://github.com/sealerio/sealer/releases/download/v0.9.1/sealer-v0.9.1-linux-amd64.tar.gz && sudo tar -xvf sealer-v0.9.1-linux-amd64.tar.gz -C /usr/bin
           sudo sealer login ${{secrets.PRIVATEWAREHOUSE}}
-          sudo sealer build -f Kubefile -t registry.cn-hangzhou.aliyuncs.com/onekey-io/kubernetes:v1.22.15 .  
+          sudo sealer build -t ${buildName}:${version} -f Kubefile .
           sudo sealer push ${buildName}:${version}
           echo "::set-output name=version::$version"
       - name: Success Commit
