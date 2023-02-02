@@ -1,7 +1,3 @@
-#version 1.19.8
-#FROM registry.cn-hangzhou.aliyuncs.com/onekey-io/ingress:v4.1.0
-#COPY imageList manifests
-
 #version 1.22.15
-FROM docker.io/sealerio/kubernetes:v1.22.15
+FROM registry.cn-hangzhou.aliyuncs.com/onekey-io/k8s-ingress:v1.22.15-4.4.2 .
 COPY imageList manifests
