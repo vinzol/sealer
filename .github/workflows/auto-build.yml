@@ -22,7 +22,7 @@ jobs:
           buildName=registry.cn-hangzhou.aliyuncs.com/onekey-io/kubernetes
           sudo wget https://github.com/sealerio/sealer/releases/download/v0.9.1/sealer-v0.9.1-linux-amd64.tar.gz && sudo tar -xvf sealer-v0.9.1-linux-amd64.tar.gz -C /usr/bin
           sudo sealer login ${{secrets.PRIVATEWAREHOUSE}}
-          sudo sealer build -t ${buildName}:${version} -f Kubefile .
+          sudo sealer build -t ${buildName}:v${version} -f Kubefile .
           sudo sealer push ${buildName}:${version}
           echo "::set-output name=version::$version"
       - name: Success Commit
