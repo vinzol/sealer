@@ -1,2 +1,2 @@
-FROM registry.cn-hangzhou.aliyuncs.com/onekey-io/k8s-ingress:v1.22.15-4.4.2 .
+FROM registry.cn-hangzhou.aliyuncs.com/onekey-io/k8s-ingress:v1.22.15-4.4.2
 COPY imageList manifests
